@@ -4,9 +4,9 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.github.firejar710</groupId>
+  <groupId>io.github.firejar710.elixer</groupId>
   <artifactId>ElixerIO</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 
   <name>ElixerIO</name>
   <description>A light-weight open source library that helps manage resources for your java projects.</description>

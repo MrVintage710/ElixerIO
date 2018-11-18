@@ -10,30 +10,28 @@ import java.util.HashMap;
 
 public class ElixerResourceManager {
 
-    private static ElixerResourceManager instance;
-
     private String resourceDir;
     private HashMap<String, ElixerResourceLocation> locationMap = new HashMap<>();
-    private ArrayList<ElixerResourceLocation> resourceLocations = new ArrayList<>();
+    private ArrayList<ElixerResourceManager> children = new ArrayList<>();
 
-    private ElixerResourceManager(String resourceDir) {
+    public ElixerResourceManager(String resourceDir) {
         this.resourceDir = resourceDir;
     }
 
-    public static ElixerResourceManager createResourceManger(String resourceDir) {
-        ElixerResourceManager.instance = new ElixerResourceManager(resourceDir);
-        return ElixerResourceManager.instance;
-    }
-
-    public static boolean isInitialized() {
-        if(ElixerResourceManager.instance == null)
-            return false;
-
-        return true;
-    }
-
     private ElixerResourceLocation getResourceLocation(String extension) {
-        return locationMap.get(extension);
+        ElixerResourceLocation value = null;
+
+        if(isMapped(extension)) {
+            value = locationMap.get(extension);
+        } else {
+            for(ElixerResourceManager manager: children) {
+               value = manager.getResourceLocation(extension);
+               if(value != null)
+                   break;
+            }
+        }
+
+        return value;
     }
 
     private String checkExtension(String filename) {
@@ -48,6 +46,10 @@ public class ElixerResourceManager {
         return extension;
     }
 
+    private boolean isMapped(String extention) {
+        return locationMap.containsKey(extention);
+    }
+
     public void addResourceLocation(ElixerResourceLocation resourceLocation) {
         for(String extension: resourceLocation.getExtensionWhiteList()) {
             if(!locationMap.containsKey(extension)) {
@@ -58,9 +60,17 @@ public class ElixerResourceManager {
         }
     }
 
+    public void addChild(ElixerResourceManager manager) {
+        children.add(manager);
+    }
+
     public Path getPath(String filename) {
         var ex = checkExtension(filename);
         return Paths.get(resourceDir, getResourceLocation(ex).getDir(), filename);
+    }
+
+    public File getFile(String filename) {
+        return getPath(filename).toFile();
     }
 
     public FileInputStream getStream(String filename) throws FileNotFoundException {
