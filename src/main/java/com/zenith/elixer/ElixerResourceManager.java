@@ -64,6 +64,10 @@ public class ElixerResourceManager {
         children.add(manager);
     }
 
+    public Path getPathRaw(String filepath) {
+        return Paths.get(resourceDir, filepath);
+    }
+
     public Path getPath(String filename) {
         var ex = checkExtension(filename);
         return Paths.get(resourceDir, getResourceLocation(ex).getDir(), filename);
@@ -71,6 +75,10 @@ public class ElixerResourceManager {
 
     public File getFile(String filename) {
         return getPath(filename).toFile();
+    }
+
+    public File getFileRaw(String filepath) {
+        return getPathRaw(filepath).toFile();
     }
 
     public FileInputStream getStream(String filename) throws FileNotFoundException {
