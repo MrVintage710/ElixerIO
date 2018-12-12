@@ -135,10 +135,9 @@ public class ElixerPNG extends ElixerFileSpecification implements IImage {
             inflater.inflate(currentRow);
             for (int x = 0; x < bytesPerRow; x += colorType.getNumChannels()) {
                 currentBytes = new byte[colorType.getNumChannels()];
-                for(int select = 0; select < colorType.getNumChannels(); select++) {
-                    currentBytes[select] = currentRow[x+select];
+                for(int channel = 0; channel < colorType.getNumChannels(); channel++) {
+                    readGrayScale(currentRow[x+channel], channel, x, y);
                 }
-                readGrayScale(currentBytes, x, y);
             }
         }
     }
@@ -147,12 +146,19 @@ public class ElixerPNG extends ElixerFileSpecification implements IImage {
         buffer.read(length);
     }
 
+    private void readGrayScale(byte current, int channel, int x, int y) {
+        for(int bit = 0; bit <= 6; bit += bitDepth) {
+            int numerator = (current >> (6-bit)) & 0xff;
+            int denominator = 0xff >> (6-bit);
+            int colorValue = numerator/denominator;
+        }
+    }
+
     private void readGrayScale(byte[] colorData, int x, int y){
         switch (bitDepth) {
             case 1:
-                byte current = colorData[0];
                 for (int bit = 0; bit < 8; bit++) {
-                    if(((current << bit) & 0x80) == 0x80) {
+                    if(((colorData[0] << bit) & 0x80) == 0x80) {
                         setColor(x*8 + bit, y, 255, 255, 255);
                     } else {
                         setColor(x*8 + bit, y, 0, 0, 0);
@@ -160,14 +166,27 @@ public class ElixerPNG extends ElixerFileSpecification implements IImage {
                 }
                 break;
             case 2:
-                for (int bit = 0; bit < 4; bit++) {
-
+                for (int bit = 0; bit < 8; bit += 2) {
+                    switch ((colorData[0] << bit) & 0xC0) {
+                        case 0xC0:
+                            setColor((x*4) + (bit/2), y, 255, 255, 255);
+                            break;
+                        case 0x80:
+                            setColor((x*4) + (bit/2), y, 170, 170, 170);
+                            break;
+                        case 0x40:
+                            setColor((x*4) + (bit/2), y, 85, 85, 85);
+                            break;
+                        case 0x00:
+                            setColor((x*4) + (bit/2), y, 0, 0, 0);
+                            break;
+                    }
                 }
         }
     }
 
     public IImage setColor(int x, int y, int r, int g, int b) {
-        if(x <= width && y <= height)
+        if(x < width && y < height)
             imageData[y][x] = new Color(r,g,b);
 
         return this;

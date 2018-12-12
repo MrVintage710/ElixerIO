@@ -1,5 +1,7 @@
 package com.zenith.elixer.specification;
 
+import com.zenith.elixer.ElixerIOUtil;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,12 +30,12 @@ public class ElixerBuffer {
 
     public int readInt() throws IOException {
         byte[] bytes = read(4);
-        return(((bytes[0]&0xff)<<24) + ((bytes[1]&0xff)<<16) + ((bytes[2]&0xff)<<8) + ((bytes[3]&0xff)));
+        return ElixerIOUtil.bytesToInt(bytes[0], bytes[1], bytes[2], bytes[3]);
     }
 
     public short readShort() throws IOException {
         byte[] bytes = read(2);
-        return (short) (((bytes[2]&0xff)<<8) + ((bytes[3]&0xff)));
+        return ElixerIOUtil.bytesToShort(bytes[0], bytes[1]);
     }
 
     public char readChar() throws IOException {
