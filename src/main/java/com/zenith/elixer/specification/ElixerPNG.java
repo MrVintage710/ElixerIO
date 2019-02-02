@@ -14,6 +14,8 @@ public class ElixerPNG extends ElixerFileSpecification implements IImage {
     private Color[][] imageData;
 
     private String currentChunkType;
+    private int cursorX;
+    private int cursorY;
 
     private enum ColorType {
         GRAYSCALE(1),
@@ -136,7 +138,11 @@ public class ElixerPNG extends ElixerFileSpecification implements IImage {
             for (int x = 0; x < bytesPerRow; x += colorType.getNumChannels()) {
                 currentBytes = new byte[colorType.getNumChannels()];
                 for(int channel = 0; channel < colorType.getNumChannels(); channel++) {
-                    readGrayScale(currentRow[x+channel], channel, x, y);
+                    if(bitDepth <= 8) {
+                        readGrayScale(currentRow[x+channel], channel, bytesPerRow, x, y);
+                    } else {
+
+                    }
                 }
             }
         }
@@ -146,11 +152,23 @@ public class ElixerPNG extends ElixerFileSpecification implements IImage {
         buffer.read(length);
     }
 
-    private void readGrayScale(byte current, int channel, int x, int y) {
-        for(int bit = 0; bit <= 6; bit += bitDepth) {
-            int numerator = (current >> (6-bit)) & 0xff;
-            int denominator = 0xff >> (6-bit);
-            int colorValue = numerator/denominator;
+    private void readGrayScale(byte current, int channel, int bytesPerChannel, int x, int y) {
+        int max = 0xff >> 8-bitDepth;
+        for(int bit = 8-bitDepth; bit >= 0; bit -= bitDepth) {
+            int numerator = (current >> bit) & max;
+            int colorValue = numerator/max;
+            addColor(colorValue, colorValue, colorValue);
+        }
+    }
+
+    private void addColor(int r, int g, int b) {
+        cursorX++;
+        if(cursorX > width-1) {
+            cursorX = 0;
+            cursorY++;
+        }
+        if(cursorY < height-1) {
+            setColor(cursorX, cursorY, r, g, b);
         }
     }
 
