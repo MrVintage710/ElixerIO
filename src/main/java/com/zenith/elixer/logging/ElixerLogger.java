@@ -4,13 +4,34 @@ import java.util.HashMap;
 
 public class ElixerLogger {
 
-    HashMap<String, LoggerForm> forms = new HashMap<>();
+    private String namespace;
+    private String currForm = "default";
+    private HashMap<String, LoggerForm> forms = new HashMap<>();
 
-    public ElixerLogger() {
+    public ElixerLogger(String namespace) {
+        this.namespace = namespace;
 
+        forms.put("default", LoggerForm.DEFAULT);
     }
 
-    public static void log(Object... objects) {
+    public void info(Object... objects) {
+        System.out.print(forms.get(currForm).getOut(this, LoggingLevel.INFO, objects));
+    }
 
+    public void warn(Object... objects) {
+        System.out.print(forms.get(currForm).getOut(this, LoggingLevel.WARN, objects));
+    }
+
+    public void err(Object... objects) {
+        System.out.print(forms.get(currForm).getOut(this, LoggingLevel.ERR, objects));
+    }
+
+    public void errEnd(Object... objects) {
+        System.out.print(forms.get(currForm).getOut(this, LoggingLevel.ERR, objects));
+        System.exit(1);
+    }
+
+    public String getNamespace() {
+        return namespace;
     }
 }

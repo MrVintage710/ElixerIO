@@ -2,17 +2,19 @@ package com.zenith.elixer.specification;
 
 import com.zenith.elixer.ElixerIOUtil;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 
 public class ElixerBuffer {
 
-    private FileInputStream in;
+    private InputStream in;
 
     public ElixerBuffer(Path path) throws FileNotFoundException {
         this.in = new FileInputStream(path.toFile());
+    }
+
+    public ElixerBuffer(String string) {
+        this.in = new ByteArrayInputStream(string.getBytes());
     }
 
     public byte read() throws IOException {
