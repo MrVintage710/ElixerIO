@@ -1,5 +1,8 @@
 package com.zenith.elixer.logging;
 
+import com.zenith.elixer.logging.instruction.ListInstruction;
+import com.zenith.elixer.logging.instruction.LoggerInstruction;
+import com.zenith.elixer.logging.instruction.StringInstruction;
 import com.zenith.elixer.specification.ElixerBuffer;
 
 import java.io.IOException;
@@ -9,7 +12,7 @@ public class LoggerForm {
 
     private static final int MAX_CHARACTER_LENGTH = Integer.MAX_VALUE;
 
-    public static final LoggerForm DEFAULT = new LoggerForm("[{N} : {L}]|");
+    public static final LoggerForm DEFAULT = new LoggerForm("[{N} : {L}]| {LST( | )}");
 
     private ArrayList<LoggerInstruction> instructions = new ArrayList<>();
     private String formString;
@@ -47,43 +50,41 @@ public class LoggerForm {
 
     private void parseTag(ElixerBuffer buffer, String token) throws IOException {
         char curr = buffer.readChar();
-        if(curr != '}' && curr != '{') {
+        if(curr != '}') {
             token += curr;
             parseTag(buffer, token);
-        } else if(curr == '}') {
-            switch(token) {
-                case "L":
-                    instructions.add(new LoggerInstruction() {
-                        @Override
-                        public String getData(ElixerLogger logger, LoggingLevel level, Object... objects) {
-                            return level.toString();
-                        }
-                    });
-                    break;
-                case "N":
-                    instructions.add(new LoggerInstruction() {
-                        @Override
-                        public String getData(ElixerLogger logger, LoggingLevel level, Object... objects) {
-                            return logger.getNamespace();
-                        }
-                    });
-                    break;
-            }
         } else {
-            switch (token) {
-                case "R":
-
+            String split[] = token.split("\\(|\\)");
+            if(split.length > 1) {
+               parseFunc(split[0], split[1].split(","));
+            } else {
+                switch (token) {
+                    case "L":
+                        instructions.add(new LoggerInstruction() {
+                            @Override
+                            public String getData(ElixerLogger logger, LoggingLevel level, Object... objects) {
+                                return level.toString();
+                            }
+                        });
+                        break;
+                    case "N":
+                        instructions.add(new LoggerInstruction() {
+                            @Override
+                            public String getData(ElixerLogger logger, LoggingLevel level, Object... objects) {
+                                return logger.getNamespace();
+                            }
+                        });
+                        break;
+                }
             }
         }
     }
 
-    private void parseFunc(ElixerBuffer buffer, String token) throws IOException {
-        char curr = buffer.readChar();
-        if(curr != '}') {
-            token += curr;
-            parseFunc(buffer, token);
-        } else {
-
+    private void parseFunc(String token, String... args) throws IOException {
+        switch (token) {
+            case "LST":
+                instructions.add(new ListInstruction(args[0]));
+                break;
         }
     }
 

@@ -1,4 +1,4 @@
-package com.zenith.elixer.specification;
+package com.zenith.elixer.specification.image;
 
 public interface IImage {
 

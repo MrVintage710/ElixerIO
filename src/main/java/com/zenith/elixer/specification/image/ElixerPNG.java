@@ -1,4 +1,7 @@
-package com.zenith.elixer.specification;
+package com.zenith.elixer.specification.image;
+
+import com.zenith.elixer.specification.ElixerBuffer;
+import com.zenith.elixer.specification.ElixerFileSpecification;
 
 import java.awt.*;
 import java.io.IOException;

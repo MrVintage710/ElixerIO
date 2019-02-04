@@ -1,4 +1,7 @@
-package com.zenith.elixer.logging;
+package com.zenith.elixer.logging.instruction;
+
+import com.zenith.elixer.logging.ElixerLogger;
+import com.zenith.elixer.logging.LoggingLevel;
 
 public class StringInstruction extends LoggerInstruction {
     String string;
