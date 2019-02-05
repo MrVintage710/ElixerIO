@@ -10,5 +10,6 @@ public class Main {
 
         ElixerLogger logger = new ElixerLogger("ElixerIO");
         logger.info("Test 1", "Test 2");
+        logger.warn("This is a test warning.");
     }
 }

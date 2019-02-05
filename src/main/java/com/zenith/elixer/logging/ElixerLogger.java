@@ -15,19 +15,19 @@ public class ElixerLogger {
     }
 
     public void info(Object... objects) {
-        System.out.print(forms.get(currForm).getOut(this, LoggingLevel.INFO, objects));
+        System.out.println(forms.get(currForm).getOut(this, LoggingLevel.INFO, objects));
     }
 
     public void warn(Object... objects) {
-        System.out.print(forms.get(currForm).getOut(this, LoggingLevel.WARN, objects));
+        System.out.println(forms.get(currForm).getOut(this, LoggingLevel.WARN, objects));
     }
 
     public void err(Object... objects) {
-        System.out.print(forms.get(currForm).getOut(this, LoggingLevel.ERR, objects));
+        System.out.println(forms.get(currForm).getOut(this, LoggingLevel.ERR, objects));
     }
 
     public void errEnd(Object... objects) {
-        System.out.print(forms.get(currForm).getOut(this, LoggingLevel.ERR, objects));
+        System.out.println(forms.get(currForm).getOut(this, LoggingLevel.ERR, objects));
         System.exit(1);
     }
 
