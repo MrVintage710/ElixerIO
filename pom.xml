@@ -6,7 +6,7 @@
 
   <groupId>io.github.firejar710.elixer</groupId>
   <artifactId>ElixerIO</artifactId>
-  <version>1.1.1</version>
+  <version>1.2.0</version>
 
   <name>ElixerIO</name>
   <description>A light-weight open source library that helps manage resources for your java projects.</description>
@@ -99,8 +99,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>10</source>
-          <target>10</target>
+          <source>8</source>
+          <target>8</target>
         </configuration>
       </plugin>
       <plugin>

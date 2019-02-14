@@ -23,11 +23,11 @@ public class ElixerLogger {
     }
 
     public void err(Object... objects) {
-        System.out.println(forms.get(currForm).getOut(this, LoggingLevel.ERR, objects));
+        System.err.println(forms.get(currForm).getOut(this, LoggingLevel.ERR, objects));
     }
 
     public void errEnd(Object... objects) {
-        System.out.println(forms.get(currForm).getOut(this, LoggingLevel.ERR, objects));
+        System.err.println(forms.get(currForm).getOut(this, LoggingLevel.ERR, objects));
         System.exit(1);
     }
 

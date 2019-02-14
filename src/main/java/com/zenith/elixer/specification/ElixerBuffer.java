@@ -51,4 +51,16 @@ public class ElixerBuffer {
         }
         return value;
     }
+
+    public String readAllString() throws IOException {
+        String result = "";
+        char curr;
+        do {
+            curr = (char) read();
+            if(curr != '\uFFFF') {
+                result += curr;
+            }
+        } while (curr != '\uFFFF');
+        return result;
+    }
 }

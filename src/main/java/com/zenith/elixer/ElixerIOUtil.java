@@ -1,6 +1,10 @@
 package com.zenith.elixer;
 
+import com.zenith.elixer.logging.ElixerLogger;
+
 public class ElixerIOUtil {
+
+    public static final ElixerLogger logger = new ElixerLogger("ElixerIO");
 
     public static String getExtention(String filename) {
         String ext = filename.split("\\.")[1];

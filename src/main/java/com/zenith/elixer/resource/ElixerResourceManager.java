@@ -1,12 +1,15 @@
-package com.zenith.elixer;
+package com.zenith.elixer.resource;
+
+import com.zenith.elixer.ElixerIOUtil;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ElixerResourceManager {
 
@@ -35,6 +38,23 @@ public class ElixerResourceManager {
         }
 
         return null;
+    }
+
+    public Path getPathR(String filename) {
+        Path result = Paths.get(resourceDir);
+        try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            URL u = classLoader.getResource(filename);
+            if(u != null) {
+                result = Paths.get(u.toURI());
+            } else {
+                ElixerIOUtil.logger.err("File could not be found.");
+                return null;
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public Path getPath(String namespace, String filename) {

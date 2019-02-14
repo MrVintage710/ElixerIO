@@ -1,4 +1,6 @@
-package com.zenith.elixer;
+package com.zenith.elixer.resource;
+
+import com.zenith.elixer.ElixerIOUtil;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
